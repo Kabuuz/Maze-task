@@ -1,0 +1,45 @@
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\projekt.exe.config
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\concrt140.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\cvextern.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\msvcp140.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\opencv_ffmpeg341_64.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\vcruntime140.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\cvextern.lib
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\projekt.exe
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\projekt.pdb
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.DebuggerVisualizers.VS2015.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.GL.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.World.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\ZedGraph.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Microsoft.VisualStudio.DebuggerVisualizers.dll
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.xml
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.GL.xml
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.World.xml
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\bin\x64\Debug\Microsoft.VisualStudio.DebuggerVisualizers.xml
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\obj\x64\Debug\projekt.csprojResolveAssemblyReference.cache
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\obj\x64\Debug\projekt.Properties.Resources.resources
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\obj\x64\Debug\projekt.csproj.GenerateResource.Cache
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\obj\x64\Debug\projekt.exe
+C:\Users\Student\Desktop\7air1\projekt\projekt\projekt\obj\x64\Debug\projekt.pdb
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\concrt140.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\cvextern.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\msvcp140.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\opencv_ffmpeg341_64.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\vcruntime140.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\cvextern.lib
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\projekt.exe.config
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\projekt.exe
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\projekt.pdb
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\Microsoft.VisualStudio.DebuggerVisualizers.dll
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.xml
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.UI.GL.xml
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\Emgu.CV.World.xml
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\bin\x64\Debug\Microsoft.VisualStudio.DebuggerVisualizers.xml
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.csprojAssemblyReference.cache
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.Form1.resources
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.Properties.Resources.resources
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.csproj.GenerateResource.cache
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.csproj.CopyComplete
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.exe
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Debug\projekt.pdb
