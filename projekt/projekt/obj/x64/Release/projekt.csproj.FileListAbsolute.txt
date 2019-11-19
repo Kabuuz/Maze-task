@@ -1,0 +1,4 @@
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Release\projekt.csprojAssemblyReference.cache
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Release\projekt.Form1.resources
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Release\projekt.Properties.Resources.resources
+D:\Studia\7sem\Systemy wizyjne\Projekt\projekt\projekt\obj\x64\Release\projekt.csproj.GenerateResource.cache

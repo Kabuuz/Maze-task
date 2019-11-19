@@ -2,12 +2,8 @@
 using Emgu.CV.Structure;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace projekt
@@ -19,6 +15,9 @@ namespace projekt
 
         private Size wymaganyRozmiar;//do skalowania
 
+        private byte[] LUTprog = new byte[256];
+        private byte prog = 128;
+
         public Form1()
         {
             InitializeComponent();
@@ -26,15 +25,27 @@ namespace projekt
             wymaganyRozmiar = pictureBoxWczytanyObraz.Size;
             obrazWczytany = new Image<Bgr, byte>(wymaganyRozmiar);
 
-            kamera = new VideoCapture(0);//inicjalizacja i start kamery
+            for(int i=0;i<LUTprog.Length;i++)
+            {
+                if(i<prog)
+                {
+                    LUTprog[i] = 0;
+                }
+                else if(i>=prog)
+                {
+                    LUTprog[i] = 255;
+                }
+            }
+
+          /*  kamera = new VideoCapture(0);//inicjalizacja i start kamery
             kamera.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, wymaganyRozmiar.Width);
-            kamera.Start();
+            kamera.Start();*/
         }
 
         private void buttonZPliku_Click(object sender, EventArgs e)
         {
             Mat zPliku;//plik przechowywujacy png/jpg
-            zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\test.png");
+            zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\labirynt_paint.png");
             //zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\labirynt_paint.png");//wczytaj plik
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
@@ -50,6 +61,25 @@ namespace projekt
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;
         }
 
+        private void progowanie()
+        {
+            byte[,,] temp = obrazWczytany.Data;
+            int wysokosc = obrazWczytany.Height;
+            int szerokosc = obrazWczytany.Width;
+
+            for(int wys=0;wys<wysokosc;wys++)
+            {
+                for(int szer=0;szer<szerokosc;szer++)
+                {
+                    temp[wys, szer, 0] = LUTprog[temp[wys, szer, 0]];
+                    temp[wys, szer, 1] = LUTprog[temp[wys, szer, 1]];
+                    temp[wys, szer, 2] = LUTprog[temp[wys, szer, 2]];
+                }
+            }
+
+            obrazWczytany.Data = temp;
+            //pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap; zeby nie pokazywac na obrazku ze jest progowanie
+        }
 
         //Segmentacja
         Queue<Point> pix_tlace = new Queue<Point>();
@@ -58,6 +88,7 @@ namespace projekt
         Queue<Point> pix_wypalone = new Queue<Point>();
 
         private MCvScalar cecha_palnosci = new MCvScalar(0xFF, 0xFF, 0xFF);
+
         private MCvScalar cecha_nadpalenia = new MCvScalar(0, 0, 0);
 
         private MCvScalar kolor_tlenia = new MCvScalar(51, 153, 255);
@@ -65,12 +96,15 @@ namespace projekt
         private MCvScalar kolor_nadpalenia = new MCvScalar(51, 204, 51);
         private MCvScalar aktualny_kolor_wypalenia = new MCvScalar(100, 100, 100);
 
-        private MCvScalar kolorSciezki = new MCvScalar(255, 255, 255);
+        private MCvScalar kolorSciezki = new MCvScalar(0xff, 0xff, 0xff);
+
+        
+
 
         private int nr_pozaru = 0;
         private bool skos = false;
         private bool cecha_dowolna = false;
-
+        
         private void Wyczysc_dane_pozaru()
         {
             nr_pozaru = 0;
@@ -275,6 +309,7 @@ namespace projekt
 
         private void buttonRozpocznijSegmentacje_Click(object sender, EventArgs e)
         {
+            progowanie();
             Pozar_Calosci();
         }
 
@@ -324,7 +359,7 @@ namespace projekt
 
         private void buttonPokazWektory_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void buttonPokazSciezke_Click(object sender, EventArgs e)
@@ -332,16 +367,9 @@ namespace projekt
 
         }
 
-
-
-
-
-
-
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
+           // kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
         }
     }
 }

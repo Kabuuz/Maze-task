@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Wektory");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Wektory");
             this.pictureBoxWczytanyObraz = new System.Windows.Forms.PictureBox();
             this.buttonZPliku = new System.Windows.Forms.Button();
             this.buttonZKamery = new System.Windows.Forms.Button();
@@ -61,9 +61,9 @@
             // pictureBoxWczytanyObraz
             // 
             this.pictureBoxWczytanyObraz.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.pictureBoxWczytanyObraz.Location = new System.Drawing.Point(12, 33);
+            this.pictureBoxWczytanyObraz.Location = new System.Drawing.Point(16, 33);
             this.pictureBoxWczytanyObraz.Name = "pictureBoxWczytanyObraz";
-            this.pictureBoxWczytanyObraz.Size = new System.Drawing.Size(440, 340);
+            this.pictureBoxWczytanyObraz.Size = new System.Drawing.Size(456, 272);
             this.pictureBoxWczytanyObraz.TabIndex = 0;
             this.pictureBoxWczytanyObraz.TabStop = false;
             // 
@@ -91,7 +91,7 @@
             // 
             this.groupBoxWczytywanieObrazu.Controls.Add(this.buttonZKamery);
             this.groupBoxWczytywanieObrazu.Controls.Add(this.buttonZPliku);
-            this.groupBoxWczytywanieObrazu.Location = new System.Drawing.Point(490, 12);
+            this.groupBoxWczytywanieObrazu.Location = new System.Drawing.Point(494, 33);
             this.groupBoxWczytywanieObrazu.Name = "groupBoxWczytywanieObrazu";
             this.groupBoxWczytywanieObrazu.Size = new System.Drawing.Size(351, 68);
             this.groupBoxWczytywanieObrazu.TabIndex = 3;
@@ -101,9 +101,9 @@
             // pictureBoxPoSegmentacji
             // 
             this.pictureBoxPoSegmentacji.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.pictureBoxPoSegmentacji.Location = new System.Drawing.Point(12, 396);
+            this.pictureBoxPoSegmentacji.Location = new System.Drawing.Point(16, 341);
             this.pictureBoxPoSegmentacji.Name = "pictureBoxPoSegmentacji";
-            this.pictureBoxPoSegmentacji.Size = new System.Drawing.Size(440, 340);
+            this.pictureBoxPoSegmentacji.Size = new System.Drawing.Size(456, 272);
             this.pictureBoxPoSegmentacji.TabIndex = 4;
             this.pictureBoxPoSegmentacji.TabStop = false;
             // 
@@ -119,7 +119,7 @@
             // labelSegmentacjaObraz
             // 
             this.labelSegmentacjaObraz.AutoSize = true;
-            this.labelSegmentacjaObraz.Location = new System.Drawing.Point(13, 376);
+            this.labelSegmentacjaObraz.Location = new System.Drawing.Point(13, 321);
             this.labelSegmentacjaObraz.Name = "labelSegmentacjaObraz";
             this.labelSegmentacjaObraz.Size = new System.Drawing.Size(138, 17);
             this.labelSegmentacjaObraz.TabIndex = 5;
@@ -133,7 +133,7 @@
             this.groupBoxSegmentacja.Controls.Add(this.numericUpDownWyborElementu);
             this.groupBoxSegmentacja.Controls.Add(this.buttonKopiujElement);
             this.groupBoxSegmentacja.Controls.Add(this.buttonRozpocznijSegmentacje);
-            this.groupBoxSegmentacja.Location = new System.Drawing.Point(490, 86);
+            this.groupBoxSegmentacja.Location = new System.Drawing.Point(494, 107);
             this.groupBoxSegmentacja.Name = "groupBoxSegmentacja";
             this.groupBoxSegmentacja.Size = new System.Drawing.Size(351, 117);
             this.groupBoxSegmentacja.TabIndex = 6;
@@ -220,9 +220,9 @@
             this.groupBoxRuchPilki.Controls.Add(this.listViewListaWektorow);
             this.groupBoxRuchPilki.Controls.Add(this.buttonPokazSciezke);
             this.groupBoxRuchPilki.Controls.Add(this.buttonPokazWektory);
-            this.groupBoxRuchPilki.Location = new System.Drawing.Point(490, 228);
+            this.groupBoxRuchPilki.Location = new System.Drawing.Point(494, 230);
             this.groupBoxRuchPilki.Name = "groupBoxRuchPilki";
-            this.groupBoxRuchPilki.Size = new System.Drawing.Size(351, 508);
+            this.groupBoxRuchPilki.Size = new System.Drawing.Size(351, 407);
             this.groupBoxRuchPilki.TabIndex = 8;
             this.groupBoxRuchPilki.TabStop = false;
             this.groupBoxRuchPilki.Text = "Ruch piłki";
@@ -233,10 +233,10 @@
             this.Wektory});
             this.listViewListaWektorow.HideSelection = false;
             this.listViewListaWektorow.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.listViewListaWektorow.Location = new System.Drawing.Point(24, 89);
             this.listViewListaWektorow.Name = "listViewListaWektorow";
-            this.listViewListaWektorow.Size = new System.Drawing.Size(306, 402);
+            this.listViewListaWektorow.Size = new System.Drawing.Size(306, 294);
             this.listViewListaWektorow.TabIndex = 2;
             this.listViewListaWektorow.UseCompatibleStateImageBehavior = false;
             // 
@@ -268,7 +268,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(981, 748);
+            this.ClientSize = new System.Drawing.Size(858, 626);
             this.Controls.Add(this.groupBoxRuchPilki);
             this.Controls.Add(this.groupBoxSegmentacja);
             this.Controls.Add(this.labelSegmentacjaObraz);
