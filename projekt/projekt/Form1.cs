@@ -20,6 +20,8 @@ namespace projekt
 
         Point start;
         Point stop;
+        Point srodekPilki;
+        int promienPilki;
 
         public Form1()
         {
@@ -37,7 +39,6 @@ namespace projekt
         {
             Mat zPliku;//plik przechowywujacy png/jpg
             zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\labirynt_paint.png");
-            //zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\labirynt_paint.png");//wczytaj plik
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;//wyświetlenie obrazu
@@ -97,15 +98,14 @@ namespace projekt
         private MCvScalar kolor_palenia = new MCvScalar(0, 0, 204);
         private MCvScalar kolor_nadpalenia = new MCvScalar(51, 204, 51);
         private MCvScalar aktualny_kolor_wypalenia = new MCvScalar(100, 100, 100);
-
+        //kolor wypalenai
         private MCvScalar kolorSciezkiWypalanie = new MCvScalar(60, 60, 60);
         private MCvScalar kolorPilkiWypalanie = new MCvScalar(45, 45, 45);
         private MCvScalar kolorScianWypalanie = new MCvScalar(30, 30, 30);
-
+        //kolor nadpalenia
         private MCvScalar kolorSciezkiNadpalanie = new MCvScalar(60, 60, 128);
         private MCvScalar kolorPilkiNadpalanie = new MCvScalar(45, 45, 128);
         private MCvScalar kolorScianNadpalanie = new MCvScalar(30, 30, 128);
-
         //jaki wyswietlic w kopiowaniu
         private MCvScalar kolorSciezkiKopiowanie = new MCvScalar(255, 255, 255);
         private MCvScalar kolorScianKopiowanie = new MCvScalar(255, 0, 0);
@@ -127,8 +127,6 @@ namespace projekt
             pix_tlace.Clear();
             pix_wypalone.Clear();
         }
-
-
 
         private void Tlace_do_palacych(byte[,,] temp)
         {
@@ -398,6 +396,7 @@ namespace projekt
             }
         }
 
+        //Mechanika
         private Point znajdzSrodekCiezkosciKoloru(MCvScalar kolor)
         {
             Point tempPoint;
@@ -432,11 +431,63 @@ namespace projekt
             return tempPoint;
         }
 
+        private int obliczaniePromieniaPilki()//sprawdzanie odlelosci pion/poziom do kranca pilki od srodka
+        {
+            int[] odleglosciOdSrodka=new int[4];
+
+            byte[,,] obraz = obrazWczytany.Data;
+            int wysokosc = obrazWczytany.Height;
+            int szerokosc = obrazWczytany.Width;
+
+
+            for (int wys = srodekPilki.Y; wys < wysokosc; wys++)
+            {
+                if (obraz[wys, srodekPilki.X, 0] != kolorPilki.V0)
+                {
+                    odleglosciOdSrodka[0] = wys - srodekPilki.Y;
+                    break;
+                }
+            }
+            for (int wys = srodekPilki.Y; wys > -1; wys--)
+            {
+                if (obraz[wys, srodekPilki.X, 0] != kolorPilki.V0)
+                {
+                    odleglosciOdSrodka[1] = srodekPilki.Y - wys;
+                    break;
+                }
+            }
+            for (int szer = srodekPilki.X; szer < szerokosc; szer++)
+            {
+                if (obraz[srodekPilki.Y, szer, 0] != kolorPilki.V0)
+                {
+                    odleglosciOdSrodka[2] = szer - srodekPilki.X;
+                    break;
+                }
+            }
+            for (int szer = srodekPilki.X; szer >-1; szer--)
+            {
+                if (obraz[srodekPilki.Y, szer, 0] != kolorPilki.V0)
+                {
+                    odleglosciOdSrodka[3] =  srodekPilki.X- szer ;
+                    break;
+                }
+            }
+
+
+
+            Array.Sort(odleglosciOdSrodka);
+            return ((odleglosciOdSrodka[3]+odleglosciOdSrodka[0])/2);//usredniony promien z najwiekszej i najmniejszej odleglosci
+        }
+
+
+        //Przyciski
         private void buttonRozpocznijSegmentacje_Click(object sender, EventArgs e)
         {
             progowanie();
             start = znajdzSrodekCiezkosciKoloru(kolorStart);
             stop = znajdzSrodekCiezkosciKoloru(kolorStop);
+            srodekPilki = znajdzSrodekCiezkosciKoloru(kolorPilki);
+            promienPilki = obliczaniePromieniaPilki();
             Pozar_Calosci();
         }
 
