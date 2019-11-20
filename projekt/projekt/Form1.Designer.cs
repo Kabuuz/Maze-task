@@ -40,7 +40,9 @@
             this.groupBoxSegmentacja = new System.Windows.Forms.GroupBox();
             this.labelOpisElementów3 = new System.Windows.Forms.Label();
             this.labelOpisElementów2 = new System.Windows.Forms.Label();
+            this.labelProg = new System.Windows.Forms.Label();
             this.labelOpisElementów1 = new System.Windows.Forms.Label();
+            this.numericUpDownProg = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownWyborElementu = new System.Windows.Forms.NumericUpDown();
             this.buttonKopiujElement = new System.Windows.Forms.Button();
             this.buttonRozpocznijSegmentacje = new System.Windows.Forms.Button();
@@ -54,6 +56,7 @@
             this.groupBoxWczytywanieObrazu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPoSegmentacji)).BeginInit();
             this.groupBoxSegmentacja.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWyborElementu)).BeginInit();
             this.groupBoxRuchPilki.SuspendLayout();
             this.SuspendLayout();
@@ -129,13 +132,15 @@
             // 
             this.groupBoxSegmentacja.Controls.Add(this.labelOpisElementów3);
             this.groupBoxSegmentacja.Controls.Add(this.labelOpisElementów2);
+            this.groupBoxSegmentacja.Controls.Add(this.labelProg);
             this.groupBoxSegmentacja.Controls.Add(this.labelOpisElementów1);
+            this.groupBoxSegmentacja.Controls.Add(this.numericUpDownProg);
             this.groupBoxSegmentacja.Controls.Add(this.numericUpDownWyborElementu);
             this.groupBoxSegmentacja.Controls.Add(this.buttonKopiujElement);
             this.groupBoxSegmentacja.Controls.Add(this.buttonRozpocznijSegmentacje);
             this.groupBoxSegmentacja.Location = new System.Drawing.Point(494, 107);
             this.groupBoxSegmentacja.Name = "groupBoxSegmentacja";
-            this.groupBoxSegmentacja.Size = new System.Drawing.Size(351, 117);
+            this.groupBoxSegmentacja.Size = new System.Drawing.Size(351, 192);
             this.groupBoxSegmentacja.TabIndex = 6;
             this.groupBoxSegmentacja.TabStop = false;
             this.groupBoxSegmentacja.Text = "Segmentacja";
@@ -143,7 +148,7 @@
             // labelOpisElementów3
             // 
             this.labelOpisElementów3.AutoSize = true;
-            this.labelOpisElementów3.Location = new System.Drawing.Point(189, 51);
+            this.labelOpisElementów3.Location = new System.Drawing.Point(21, 103);
             this.labelOpisElementów3.Name = "labelOpisElementów3";
             this.labelOpisElementów3.Size = new System.Drawing.Size(54, 17);
             this.labelOpisElementów3.TabIndex = 3;
@@ -152,24 +157,50 @@
             // labelOpisElementów2
             // 
             this.labelOpisElementów2.AutoSize = true;
-            this.labelOpisElementów2.Location = new System.Drawing.Point(189, 34);
+            this.labelOpisElementów2.Location = new System.Drawing.Point(21, 86);
             this.labelOpisElementów2.Name = "labelOpisElementów2";
             this.labelOpisElementów2.Size = new System.Drawing.Size(65, 17);
             this.labelOpisElementów2.TabIndex = 3;
             this.labelOpisElementów2.Text = "2- ściany";
             // 
+            // labelProg
+            // 
+            this.labelProg.AutoSize = true;
+            this.labelProg.Location = new System.Drawing.Point(207, 21);
+            this.labelProg.Name = "labelProg";
+            this.labelProg.Size = new System.Drawing.Size(38, 17);
+            this.labelProg.TabIndex = 3;
+            this.labelProg.Text = "Próg";
+            // 
             // labelOpisElementów1
             // 
             this.labelOpisElementów1.AutoSize = true;
-            this.labelOpisElementów1.Location = new System.Drawing.Point(189, 18);
+            this.labelOpisElementów1.Location = new System.Drawing.Point(21, 69);
             this.labelOpisElementów1.Name = "labelOpisElementów1";
             this.labelOpisElementów1.Size = new System.Drawing.Size(62, 17);
             this.labelOpisElementów1.TabIndex = 3;
             this.labelOpisElementów1.Text = "1- droga";
             // 
+            // numericUpDownProg
+            // 
+            this.numericUpDownProg.Location = new System.Drawing.Point(210, 42);
+            this.numericUpDownProg.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownProg.Name = "numericUpDownProg";
+            this.numericUpDownProg.Size = new System.Drawing.Size(120, 22);
+            this.numericUpDownProg.TabIndex = 2;
+            this.numericUpDownProg.Value = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+            // 
             // numericUpDownWyborElementu
             // 
-            this.numericUpDownWyborElementu.Location = new System.Drawing.Point(189, 77);
+            this.numericUpDownWyborElementu.Location = new System.Drawing.Point(24, 123);
             this.numericUpDownWyborElementu.Maximum = new decimal(new int[] {
             3,
             0,
@@ -191,7 +222,7 @@
             // 
             // buttonKopiujElement
             // 
-            this.buttonKopiujElement.Location = new System.Drawing.Point(24, 70);
+            this.buttonKopiujElement.Location = new System.Drawing.Point(24, 151);
             this.buttonKopiujElement.Name = "buttonKopiujElement";
             this.buttonKopiujElement.Size = new System.Drawing.Size(150, 35);
             this.buttonKopiujElement.TabIndex = 1;
@@ -220,9 +251,9 @@
             this.groupBoxRuchPilki.Controls.Add(this.listViewListaWektorow);
             this.groupBoxRuchPilki.Controls.Add(this.buttonPokazSciezke);
             this.groupBoxRuchPilki.Controls.Add(this.buttonPokazWektory);
-            this.groupBoxRuchPilki.Location = new System.Drawing.Point(494, 230);
+            this.groupBoxRuchPilki.Location = new System.Drawing.Point(494, 305);
             this.groupBoxRuchPilki.Name = "groupBoxRuchPilki";
-            this.groupBoxRuchPilki.Size = new System.Drawing.Size(351, 407);
+            this.groupBoxRuchPilki.Size = new System.Drawing.Size(351, 309);
             this.groupBoxRuchPilki.TabIndex = 8;
             this.groupBoxRuchPilki.TabStop = false;
             this.groupBoxRuchPilki.Text = "Ruch piłki";
@@ -284,6 +315,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPoSegmentacji)).EndInit();
             this.groupBoxSegmentacja.ResumeLayout(false);
             this.groupBoxSegmentacja.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWyborElementu)).EndInit();
             this.groupBoxRuchPilki.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -313,6 +345,8 @@
         private System.Windows.Forms.ColumnHeader Wektory;
         private System.Windows.Forms.Button buttonPokazSciezke;
         private System.Windows.Forms.Button buttonPokazWektory;
+        private System.Windows.Forms.Label labelProg;
+        private System.Windows.Forms.NumericUpDown numericUpDownProg;
     }
 }
 

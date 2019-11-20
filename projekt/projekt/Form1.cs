@@ -16,7 +16,7 @@ namespace projekt
         private Size wymaganyRozmiar;//do skalowania
 
         private byte[] LUTprog = new byte[256];
-        private byte prog = 128;
+        private byte prog;
 
         public Form1()
         {
@@ -25,21 +25,9 @@ namespace projekt
             wymaganyRozmiar = pictureBoxWczytanyObraz.Size;
             obrazWczytany = new Image<Bgr, byte>(wymaganyRozmiar);
 
-            for(int i=0;i<LUTprog.Length;i++)
-            {
-                if(i<prog)
-                {
-                    LUTprog[i] = 0;
-                }
-                else if(i>=prog)
-                {
-                    LUTprog[i] = 255;
-                }
-            }
-
-          /*  kamera = new VideoCapture(0);//inicjalizacja i start kamery
+            kamera = new VideoCapture(0);//inicjalizacja i start kamery
             kamera.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, wymaganyRozmiar.Width);
-            kamera.Start();*/
+            kamera.Start();
         }
 
         private void buttonZPliku_Click(object sender, EventArgs e)
@@ -63,13 +51,26 @@ namespace projekt
 
         private void progowanie()
         {
+            prog = (byte)numericUpDownProg.Value;
+            for (int i = 0; i < 256; i++)
+            {
+                if (i < prog)
+                {
+                    LUTprog[i] = 0;
+                }
+                else if (i >= prog)
+                {
+                    LUTprog[i] = 255;
+                }
+            }
+
             byte[,,] temp = obrazWczytany.Data;
             int wysokosc = obrazWczytany.Height;
             int szerokosc = obrazWczytany.Width;
 
-            for(int wys=0;wys<wysokosc;wys++)
+            for (int wys = 0; wys < wysokosc; wys++)
             {
-                for(int szer=0;szer<szerokosc;szer++)
+                for (int szer = 0; szer < szerokosc; szer++)
                 {
                     temp[wys, szer, 0] = LUTprog[temp[wys, szer, 0]];
                     temp[wys, szer, 1] = LUTprog[temp[wys, szer, 1]];
@@ -78,7 +79,7 @@ namespace projekt
             }
 
             obrazWczytany.Data = temp;
-            //pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap; zeby nie pokazywac na obrazku ze jest progowanie
+            pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;
         }
 
         //Segmentacja
@@ -87,8 +88,6 @@ namespace projekt
         Queue<Point> pix_nadpalone = new Queue<Point>();
         Queue<Point> pix_wypalone = new Queue<Point>();
 
-        private MCvScalar cecha_palnosci = new MCvScalar(0xFF, 0xFF, 0xFF);
-
         private MCvScalar cecha_nadpalenia = new MCvScalar(0, 0, 0);
 
         private MCvScalar kolor_tlenia = new MCvScalar(51, 153, 255);
@@ -96,33 +95,35 @@ namespace projekt
         private MCvScalar kolor_nadpalenia = new MCvScalar(51, 204, 51);
         private MCvScalar aktualny_kolor_wypalenia = new MCvScalar(100, 100, 100);
 
-        private MCvScalar kolorSciezki = new MCvScalar(0xff, 0xff, 0xff);
+        private MCvScalar kolorSciezkiWypalanie = new MCvScalar(60, 60, 60);
+        private MCvScalar kolorPilkiWypalanie = new MCvScalar(45, 45, 45);
+        private MCvScalar kolorScianWypalanie = new MCvScalar(30, 30, 30);
 
-        
+        private MCvScalar kolorSciezkiNadpalanie = new MCvScalar(60, 60, 128);
+        private MCvScalar kolorPilkiNadpalanie = new MCvScalar(45, 45, 128);
+        private MCvScalar kolorScianNadpalanie = new MCvScalar(30, 30, 128);
 
+        //jaki wyswietlic w kopiowaniu
+        private MCvScalar kolorSciezkiKopiowanie = new MCvScalar(255, 255, 255);
+        private MCvScalar kolorScianKopiowanie = new MCvScalar(255, 0, 0);
+        private MCvScalar kolorPilkiKopiowanie = new MCvScalar(0, 255, 255);
+        //kolor po progowaniu
+        private MCvScalar kolorSciezki = new MCvScalar(255, 255, 255);
+        private MCvScalar kolorScian = new MCvScalar(255, 0, 0);
+        private MCvScalar kolorPilki = new MCvScalar(0, 255, 255);
 
-        private int nr_pozaru = 0;
         private bool skos = false;
         private bool cecha_dowolna = false;
-        
+
         private void Wyczysc_dane_pozaru()
         {
-            nr_pozaru = 0;
             pix_nadpalone.Clear();
             pix_palace.Clear();
             pix_tlace.Clear();
             pix_wypalone.Clear();
         }
 
-        private void resetujKolory()
-        {
-            kolor_nadpalenia.V0 = 51;
-            kolor_nadpalenia.V1 = 204;
-            kolor_nadpalenia.V2 = 51;
-            aktualny_kolor_wypalenia.V0 = 100;
-            aktualny_kolor_wypalenia.V1 = 100;
-            aktualny_kolor_wypalenia.V2 = 100;
-        }
+
 
         private void Tlace_do_palacych(byte[,,] temp)
         {
@@ -156,9 +157,6 @@ namespace projekt
 
         private void Nadpalenie_palacego(byte[,,] temp, Point pix_in)
         {
-            //Należy zobaczyć co się stanie z rysunkiem innym niż *.bmp i/lub takim na którym została wywołana metoda
-            //resize zarówno dla cechy dowolnej (jakiejkolwiek) jak i konkretnej
-            //Należy zwrócic uwagę na nieoczekiwane zmiany kolorów na modyfikowanych lub kompresowanych obrazach
             if (Czy_piksel_w_zakresie(pix_in))
             {
                 Point[] sasiedzi = Wylicz_wspolrzedne_sasiednich_pikseli(pix_in);
@@ -224,7 +222,9 @@ namespace projekt
 
         private bool Sprawdz_czy_cecha_palnosci(byte B, byte G, byte R)
         {
-            if (B == cecha_palnosci.V0 && G == cecha_palnosci.V1 && R == cecha_palnosci.V2)
+            if (B == kolorSciezki.V0 && G == kolorSciezki.V1 && R == kolorSciezki.V2)//||
+                //B == kolorScian.V0 && G == kolorScian.V1 && R == kolorScian.V2 ||
+                //B == kolorPilki.V0 && G == kolorPilki.V1 && R == kolorPilki.V2 )
                 return true;
             else
                 return false;
@@ -240,7 +240,9 @@ namespace projekt
 
         private bool Sprawdz_czy_jakiekolwiek_nadpalenie(byte B, byte G, byte R)
         {
-            if (B == cecha_palnosci.V0 && G == cecha_palnosci.V1 && R == cecha_palnosci.V2)
+            if (B == kolorPilki.V0 && G == kolorPilki.V1 && R == kolorPilki.V2 ||
+                B == kolorScian.V0 && G == kolorScian.V1 && R == kolorScian.V2 ||
+                B == kolorSciezki.V0 && G == kolorSciezki.V1 && R == kolorSciezki.V2)
                 return false;
             else if (B == cecha_nadpalenia.V0 && G == cecha_nadpalenia.V1 && R == cecha_nadpalenia.V2)
                 return true;
@@ -256,11 +258,8 @@ namespace projekt
                 return true;
         }
 
-
         private void Pozar_Calosci()
         {
-            Wyczysc_dane_pozaru();
-
             int width = obrazWczytany.Width;
             int height = obrazWczytany.Height;
             byte[,,] temp = obrazWczytany.Data;
@@ -269,13 +268,20 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (Sprawdz_czy_cecha_palnosci(temp[y, x, 0], temp[y, x, 1], temp[y, x, 2]))
+                    if (temp[y, x, 0] == kolorSciezki.V0 && temp[y, x, 1] == kolorSciezki.V1 && temp[y, x, 2] == kolorSciezki.V2)
                     {
+                        kolor_nadpalenia.V0 = kolorSciezkiNadpalanie.V0;
+                        kolor_nadpalenia.V1 = kolorSciezkiNadpalanie.V1;
+                        kolor_nadpalenia.V2 = kolorSciezkiNadpalanie.V2;
+                        aktualny_kolor_wypalenia.V0 = kolorSciezkiWypalanie.V0;
+                        aktualny_kolor_wypalenia.V1 = kolorSciezkiWypalanie.V1;
+                        aktualny_kolor_wypalenia.V2 = kolorSciezkiWypalanie.V2;
+
                         pix_tlace.Enqueue(new Point(x, y));
                         temp[y, x, 0] = (byte)kolor_tlenia.V0;
                         temp[y, x, 1] = (byte)kolor_tlenia.V1;
                         temp[y, x, 2] = (byte)kolor_tlenia.V2;
-                        nr_pozaru++;
+
                         while (pix_tlace.Count() != 0)
                         {
                             Tlace_do_palacych(temp);
@@ -296,12 +302,90 @@ namespace projekt
                             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;
                             Application.DoEvents();
                         }
-                        kolor_nadpalenia.V0++;
-                        kolor_nadpalenia.V1++;
-                        kolor_nadpalenia.V2++;
-                        aktualny_kolor_wypalenia.V0++;
-                        aktualny_kolor_wypalenia.V1++;
-                        aktualny_kolor_wypalenia.V2++;
+                    }
+                }
+            }
+            Wyczysc_dane_pozaru();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (temp[y, x, 0] == kolorScian.V0 && temp[y, x, 1] == kolorScian.V1 && temp[y, x, 2] == kolorScian.V2)
+                    {
+                        kolor_nadpalenia.V0 = kolorScianNadpalanie.V0;
+                        kolor_nadpalenia.V1 = kolorScianNadpalanie.V1;
+                        kolor_nadpalenia.V2 = kolorScianNadpalanie.V2;
+                        aktualny_kolor_wypalenia.V0 = kolorScianWypalanie.V0;
+                        aktualny_kolor_wypalenia.V1 = kolorScianWypalanie.V1;
+                        aktualny_kolor_wypalenia.V2 = kolorScianWypalanie.V2;
+
+                        pix_tlace.Enqueue(new Point(x, y));
+                        temp[y, x, 0] = (byte)kolor_tlenia.V0;
+                        temp[y, x, 1] = (byte)kolor_tlenia.V1;
+                        temp[y, x, 2] = (byte)kolor_tlenia.V2;
+
+                        while (pix_tlace.Count() != 0)
+                        {
+                            Tlace_do_palacych(temp);
+
+                            foreach (Point pix in pix_palace)
+                            {
+                                Tlenie_od_palacego(temp, pix);
+                            }
+
+                            foreach (Point pix in pix_palace)
+                            {
+                                Nadpalenie_palacego(temp, pix);
+                            }
+
+                            Wypalenie_palacego(temp);
+
+                            obrazWczytany.Data = temp;
+                            pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;
+                            Application.DoEvents();
+                        }
+                    }
+                }
+            }
+            Wyczysc_dane_pozaru();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (temp[y, x, 0] == kolorPilki.V0 && temp[y, x, 1] == kolorPilki.V1 && temp[y, x, 2] == kolorPilki.V2)
+                    {
+                        kolor_nadpalenia.V0 = kolorPilkiNadpalanie.V0;
+                        kolor_nadpalenia.V1 = kolorPilkiNadpalanie.V1;
+                        kolor_nadpalenia.V2 = kolorPilkiNadpalanie.V2;
+                        aktualny_kolor_wypalenia.V0 = kolorPilkiWypalanie.V0;
+                        aktualny_kolor_wypalenia.V1 = kolorPilkiWypalanie.V1;
+                        aktualny_kolor_wypalenia.V2 = kolorPilkiWypalanie.V2;
+
+                        pix_tlace.Enqueue(new Point(x, y));
+                        temp[y, x, 0] = (byte)kolor_tlenia.V0;
+                        temp[y, x, 1] = (byte)kolor_tlenia.V1;
+                        temp[y, x, 2] = (byte)kolor_tlenia.V2;
+
+                        while (pix_tlace.Count() != 0)
+                        {
+                            Tlace_do_palacych(temp);
+
+                            foreach (Point pix in pix_palace)
+                            {
+                                Tlenie_od_palacego(temp, pix);
+                            }
+
+                            foreach (Point pix in pix_palace)
+                            {
+                                Nadpalenie_palacego(temp, pix);
+                            }
+
+                            Wypalenie_palacego(temp);
+
+                            obrazWczytany.Data = temp;
+                            pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;
+                            Application.DoEvents();
+                        }
                     }
                 }
             }
@@ -313,42 +397,83 @@ namespace projekt
             Pozar_Calosci();
         }
 
-        private bool sprawdzCzyNalezyDoElementu(byte B, byte G, byte R, int nr_elementu)
+        private bool czyNalezyDoElementu(byte B, byte G, byte R, int nr_el)
         {
-            resetujKolory();
-            if ((B == (byte)(aktualny_kolor_wypalenia.V0 + nr_elementu-1) &&
-                G == (byte)(aktualny_kolor_wypalenia.V1 + nr_elementu - 1) &&
-                R == (byte)(aktualny_kolor_wypalenia.V2 + nr_elementu - 1)) ||
-                (B == (byte)(kolor_nadpalenia.V0 + nr_elementu - 1) &&
-                G == (byte)(kolor_nadpalenia.V1 + nr_elementu - 1) &&
-                R == (byte)(kolor_nadpalenia.V2 + nr_elementu - 1)))
+            //nr el: 1-droga, 2- sciana, 3- pilka
+            if (nr_el == 1)
             {
-                return true;
+                if (B == kolorSciezkiNadpalanie.V0 && G == kolorSciezkiNadpalanie.V1 && R == kolorSciezkiNadpalanie.V2 ||
+                    B == kolorSciezkiWypalanie.V0 && G == kolorSciezkiWypalanie.V1 && R == kolorSciezkiWypalanie.V2)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (nr_el == 2)
+            {
+                if (B == kolorScianNadpalanie.V0 && G == kolorScianNadpalanie.V1 && R == kolorScianNadpalanie.V2 ||
+                    B == kolorScianWypalanie.V0 && G == kolorScianWypalanie.V1 && R == kolorScianWypalanie.V2)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return false;
+                if (B == kolorPilkiNadpalanie.V0 && G == kolorPilkiNadpalanie.V1 && R == kolorPilkiNadpalanie.V2 ||
+                    B == kolorPilkiWypalanie.V0 && G == kolorPilkiWypalanie.V1 && R == kolorPilkiWypalanie.V2)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
+
         }
 
         private void buttonKopiujElement_Click(object sender, EventArgs e)
         {
+
             byte[,,] temp = obrazWczytany.Data;
             int wysokosc = obrazWczytany.Height;
             int szerokosc = obrazWczytany.Width;
             byte[,,] element = new byte[wysokosc, szerokosc, 3];
 
             int nr_elementu = (int)numericUpDownWyborElementu.Value;
-
-            for (int i = 0; i < wysokosc; i++)
+            for (int wys = 0; wys < wysokosc; wys++)
             {
-                for (int j = 0; j < szerokosc; j++)
+                for (int szer = 0; szer < szerokosc; szer++)
                 {
-                    if (sprawdzCzyNalezyDoElementu(temp[i, j, 0], temp[i, j, 1], temp[i, j, 2], nr_elementu))
+                    if(czyNalezyDoElementu(temp[wys, szer, 0], temp[wys, szer, 1], temp[wys, szer, 2], nr_elementu))
                     {
-                        element[i, j, 0] = (byte)kolorSciezki.V0;
-                        element[i, j, 1] = (byte)kolorSciezki.V1;
-                        element[i, j, 2] = (byte)kolorSciezki.V2;
+                        //1 - droga, 2 - sciana, 3 - pilka
+                        if (nr_elementu == 1)
+                        {
+                            element[wys, szer, 0] =(byte)kolorSciezkiKopiowanie.V0;
+                            element[wys, szer, 1] = (byte)kolorSciezkiKopiowanie.V1;
+                            element[wys, szer, 2] = (byte)kolorSciezkiKopiowanie.V2;
+                        }
+                        else if(nr_elementu==2)
+                        {
+                            element[wys, szer, 0] = (byte)kolorScianKopiowanie.V0;
+                            element[wys, szer, 1] = (byte)kolorScianKopiowanie.V1;
+                            element[wys, szer, 2] = (byte)kolorScianKopiowanie.V2;
+                        }
+                        else
+                        {
+                            element[wys, szer, 0] = (byte)kolorPilkiKopiowanie.V0;
+                            element[wys, szer, 1] = (byte)kolorPilkiKopiowanie.V1;
+                            element[wys, szer, 2] = (byte)kolorPilkiKopiowanie.V2;
+                        }
+
                     }
                 }
             }
@@ -359,7 +484,7 @@ namespace projekt
 
         private void buttonPokazWektory_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void buttonPokazSciezke_Click(object sender, EventArgs e)
@@ -369,7 +494,7 @@ namespace projekt
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-           // kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
+            kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
         }
     }
 }
