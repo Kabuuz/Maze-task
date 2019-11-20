@@ -18,6 +18,9 @@ namespace projekt
         private byte[] LUTprog = new byte[256];
         private byte prog;
 
+        Point start;
+        Point stop;
+
         public Form1()
         {
             InitializeComponent();
@@ -111,6 +114,8 @@ namespace projekt
         private MCvScalar kolorSciezki = new MCvScalar(255, 255, 255);
         private MCvScalar kolorScian = new MCvScalar(255, 0, 0);
         private MCvScalar kolorPilki = new MCvScalar(0, 255, 255);
+        private MCvScalar kolorStart = new MCvScalar(0, 255, 0);
+        private MCvScalar kolorStop = new MCvScalar(0, 0, 255);
 
         private bool skos = false;
         private bool cecha_dowolna = false;
@@ -268,7 +273,9 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (temp[y, x, 0] == kolorSciezki.V0 && temp[y, x, 1] == kolorSciezki.V1 && temp[y, x, 2] == kolorSciezki.V2)
+                    if (temp[y, x, 0] == kolorSciezki.V0 && temp[y, x, 1] == kolorSciezki.V1 && temp[y, x, 2] == kolorSciezki.V2||
+                        temp[y, x, 0] == kolorStart.V0 && temp[y, x, 1] == kolorStart.V1 && temp[y, x, 2] == kolorStart.V2 ||
+                        temp[y, x, 0] == kolorStop.V0 && temp[y, x, 1] == kolorStop.V1 && temp[y, x, 2] == kolorStop.V2 )
                     {
                         kolor_nadpalenia.V0 = kolorSciezkiNadpalanie.V0;
                         kolor_nadpalenia.V1 = kolorSciezkiNadpalanie.V1;
@@ -391,9 +398,45 @@ namespace projekt
             }
         }
 
+        private Point znajdzSrodekCiezkosciKoloru(MCvScalar kolor)
+        {
+            Point tempPoint;
+            double F, Sx, Sy, x0, y0;
+
+            F = Sx = Sy = x0 = y0 = 0;
+
+            byte[,,] temp = obrazWczytany.Data;
+            int wysokosc = obrazWczytany.Height;
+            int szerokosc = obrazWczytany.Width;
+            for (int X = 0; X < szerokosc; X++)
+            {
+                for (int Y = 0; Y < wysokosc; Y++)
+                {
+                    if (temp[Y, X, 0] == kolor.V0 && temp[Y, X, 1] == kolor.V1 && temp[Y, X, 2] == kolor.V2)
+                    {
+                        F = F + 1;
+                        Sx = Sx + Y;
+                        Sy = Sy + X;
+                    }
+                }
+            }
+            //Obliczenie środka cieżkości
+            if (F > 0)
+            {
+                x0 = Sy / F;
+                y0 = Sx / F;
+            }
+
+            tempPoint = new Point((int)x0, (int)y0);
+
+            return tempPoint;
+        }
+
         private void buttonRozpocznijSegmentacje_Click(object sender, EventArgs e)
         {
             progowanie();
+            start = znajdzSrodekCiezkosciKoloru(kolorStart);
+            stop = znajdzSrodekCiezkosciKoloru(kolorStop);
             Pozar_Calosci();
         }
 
@@ -403,7 +446,9 @@ namespace projekt
             if (nr_el == 1)
             {
                 if (B == kolorSciezkiNadpalanie.V0 && G == kolorSciezkiNadpalanie.V1 && R == kolorSciezkiNadpalanie.V2 ||
-                    B == kolorSciezkiWypalanie.V0 && G == kolorSciezkiWypalanie.V1 && R == kolorSciezkiWypalanie.V2)
+                    B == kolorSciezkiWypalanie.V0 && G == kolorSciezkiWypalanie.V1 && R == kolorSciezkiWypalanie.V2||
+                    B == kolorPilkiNadpalanie.V0 && G == kolorPilkiNadpalanie.V1 && R == kolorPilkiNadpalanie.V2 ||
+                    B == kolorPilkiWypalanie.V0 && G == kolorPilkiWypalanie.V1 && R == kolorPilkiWypalanie.V2)
                 {
                     return true;
                 }
