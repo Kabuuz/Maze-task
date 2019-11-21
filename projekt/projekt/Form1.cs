@@ -3,6 +3,7 @@ using Emgu.CV.Structure;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -43,7 +44,7 @@ namespace projekt
             wektoryRuchow[(int)wektory.NE] = new Point(1, 1);
             wektoryRuchow[(int)wektory.N] = new Point(0, 1);
             wektoryRuchow[(int)wektory.NW] = new Point(-1, 1);
-            wektoryRuchow[(int)wektory.W] = new Point(0, -1);
+            wektoryRuchow[(int)wektory.W] = new Point(-1, 0);
             wektoryRuchow[(int)wektory.SW] = new Point(-1, -1);
             wektoryRuchow[(int)wektory.S] = new Point(0, -1);
             wektoryRuchow[(int)wektory.SE] = new Point(1, -1);
@@ -52,8 +53,10 @@ namespace projekt
 
         private void buttonZPliku_Click(object sender, EventArgs e)
         {
+            string path = Directory.GetCurrentDirectory();
+
             Mat zPliku;//plik przechowywujacy png/jpg
-            zPliku = CvInvoke.Imread(@"D:\Studia\7sem\Systemy wizyjne\Projekt\labirynt_paint.png");
+            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_paint.png");
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;//wyświetlenie obrazu
@@ -330,14 +333,14 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (temp[y, x, 0] == kolorScian.V0 && temp[y, x, 1] == kolorScian.V1 && temp[y, x, 2] == kolorScian.V2)
+                    if (temp[y, x, 0] == kolorPilki.V0 && temp[y, x, 1] == kolorPilki.V1 && temp[y, x, 2] == kolorPilki.V2)
                     {
-                        kolor_nadpalenia.V0 = kolorScianNadpalanie.V0;
-                        kolor_nadpalenia.V1 = kolorScianNadpalanie.V1;
-                        kolor_nadpalenia.V2 = kolorScianNadpalanie.V2;
-                        aktualny_kolor_wypalenia.V0 = kolorScianWypalanie.V0;
-                        aktualny_kolor_wypalenia.V1 = kolorScianWypalanie.V1;
-                        aktualny_kolor_wypalenia.V2 = kolorScianWypalanie.V2;
+                        kolor_nadpalenia.V0 = kolorPilkiNadpalanie.V0;
+                        kolor_nadpalenia.V1 = kolorPilkiNadpalanie.V1;
+                        kolor_nadpalenia.V2 = kolorPilkiNadpalanie.V2;
+                        aktualny_kolor_wypalenia.V0 = kolorPilkiWypalanie.V0;
+                        aktualny_kolor_wypalenia.V1 = kolorPilkiWypalanie.V1;
+                        aktualny_kolor_wypalenia.V2 = kolorPilkiWypalanie.V2;
 
                         pix_tlace.Enqueue(new Point(x, y));
                         temp[y, x, 0] = (byte)kolor_tlenia.V0;
@@ -372,14 +375,14 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (temp[y, x, 0] == kolorPilki.V0 && temp[y, x, 1] == kolorPilki.V1 && temp[y, x, 2] == kolorPilki.V2)
+                    if (temp[y, x, 0] == kolorScian.V0 && temp[y, x, 1] == kolorScian.V1 && temp[y, x, 2] == kolorScian.V2)
                     {
-                        kolor_nadpalenia.V0 = kolorPilkiNadpalanie.V0;
-                        kolor_nadpalenia.V1 = kolorPilkiNadpalanie.V1;
-                        kolor_nadpalenia.V2 = kolorPilkiNadpalanie.V2;
-                        aktualny_kolor_wypalenia.V0 = kolorPilkiWypalanie.V0;
-                        aktualny_kolor_wypalenia.V1 = kolorPilkiWypalanie.V1;
-                        aktualny_kolor_wypalenia.V2 = kolorPilkiWypalanie.V2;
+                        kolor_nadpalenia.V0 = kolorScianNadpalanie.V0;
+                        kolor_nadpalenia.V1 = kolorScianNadpalanie.V1;
+                        kolor_nadpalenia.V2 = kolorScianNadpalanie.V2;
+                        aktualny_kolor_wypalenia.V0 = kolorScianWypalanie.V0;
+                        aktualny_kolor_wypalenia.V1 = kolorScianWypalanie.V1;
+                        aktualny_kolor_wypalenia.V2 = kolorScianWypalanie.V2;
 
                         pix_tlace.Enqueue(new Point(x, y));
                         temp[y, x, 0] = (byte)kolor_tlenia.V0;
@@ -591,7 +594,7 @@ namespace projekt
             pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
         }
 
-        private void dodajWektorJesliMozna(Image<Bgr, byte> obraz, Point wektor)
+        private void narysujDozwolonyWektor(Image<Bgr, byte> obraz, Point wektor)
         {
             byte[,,] temp = obraz.Data;
 
@@ -623,7 +626,7 @@ namespace projekt
 
         private void buttonPokazWektory_Click(object sender, EventArgs e)
         {
-            dlugoscWektoraPrzesuwania = promienPilki * 2;
+            dlugoscWektoraPrzesuwania = promienPilki * 2;//nede przesuwac o promien dlatego sprawdzam co jest 2*promien od srodka
 
             byte[,,] temp = obrazWczytany.Data;
             int wysokosc = obrazWczytany.Height;
@@ -646,21 +649,128 @@ namespace projekt
 
             obrazPoSegmentacji = new Image<Bgr, byte>(element);
 
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.E]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NE]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.N]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NW]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.W]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SW]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.S]);
-            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SE]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.E]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NE]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.N]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NW]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.W]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SW]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.S]);
+            narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SE]);
             CvInvoke.Circle(obrazPoSegmentacji, srodekPilki, 3, kolorPilki, -1);
             pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
         }
 
+        private bool pilkaWObszarzeKonca(Point pilka, Point stop, int zasieg)
+        {
+            if (stop.X >= pilka.X - zasieg && stop.X <= pilka.X + zasieg && stop.Y >= pilka.Y - zasieg && stop.Y <= pilka.Y + zasieg)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void przesunPilke(ref Point pilka, Point wektor, ref Point wektorPoprzedni, ref Point zakazanyWektor)
+        {
+            byte[,,] temp = obrazPoSegmentacji.Data;
+            if (!(wektor.X == zakazanyWektor.X && wektor.Y == zakazanyWektor.Y)
+                && (Math.Abs(wektor.X) + Math.Abs(wektor.Y)) != 0)
+            {
+                int przesuniecieX;
+                int przesuniecieY;
+                if (Math.Abs(wektor.X) == Math.Abs(wektor.Y))
+                {
+                    przesuniecieX = (int)((double)wektor.X * (double)dlugoscWektoraPrzesuwania / Math.Sqrt(2.0));
+                    przesuniecieY = (int)((double)wektor.Y * (double)dlugoscWektoraPrzesuwania / Math.Sqrt(2.0));
+                }
+                else
+                {
+                    przesuniecieX = wektor.X * dlugoscWektoraPrzesuwania;
+                    przesuniecieY = wektor.Y * dlugoscWektoraPrzesuwania;
+                }
+
+                Point sprawdzanyPunkt = new Point((pilka.X + przesuniecieX), (pilka.Y + przesuniecieY));
+
+                if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+                {
+                    pilka.X += przesuniecieX / 2;
+                    pilka.Y += przesuniecieY / 2;
+                    zakazanyWektor.X = -wektor.X;
+                    zakazanyWektor.Y = -wektor.Y;
+                    CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
+                        pilka.Y - promienPilki, 2 * promienPilki, 2 * promienPilki),
+                        new MCvScalar(0, 0, 255), -1);
+                    pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
+                    Application.DoEvents();
+                    if (wektor.X != wektorPoprzedni.X || wektor.Y != wektorPoprzedni.Y)
+                    {
+                        wektorPoprzedni.X = wektor.X;
+                        wektorPoprzedni.Y = wektor.Y;
+                    }
+                }
+            }
+        }
+
         private void buttonPokazSciezke_Click(object sender, EventArgs e)
         {
+            double magicznyWspolczynnik = 1.5;
+            dlugoscWektoraPrzesuwania = (int)(magicznyWspolczynnik * (double)promienPilki);
+            Point pilka = new Point(start.X, start.Y);
+            Point kierunekZabroniony = new Point(0, 0);
+            Point kierunekPoprzedni = new Point(0, 0);
 
+            byte[,,] temp = obrazPoSegmentacji.Data;
+            Point sprawdzanyPunkt;
+            int B = temp[160, 136, 0];
+            int G = temp[160, 136, 1];
+            int R = temp[160, 136, 2];
+            CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
+                        pilka.Y - promienPilki, 2 * promienPilki, 2 * promienPilki),
+                        new MCvScalar(0, 0, 255), -1);
+            for (int i = 0; i < wektoryRuchow.Length; i++)
+            {
+                sprawdzanyPunkt = new Point(pilka.X + wektoryRuchow[i].X * dlugoscWektoraPrzesuwania, pilka.Y + wektoryRuchow[i].Y * dlugoscWektoraPrzesuwania);
+                if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+                {
+                    pilka.X = sprawdzanyPunkt.X;
+                    pilka.Y = sprawdzanyPunkt.Y;
+                    kierunekPoprzedni.X = wektoryRuchow[i].X;
+                    kierunekPoprzedni.Y = wektoryRuchow[i].Y;
+                }
+            }
+            CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
+                        pilka.Y - promienPilki, 2 * promienPilki, 2 * promienPilki),
+                        new MCvScalar(0, 0, 255), -1);
+            while (!pilkaWObszarzeKonca(pilka, stop, dlugoscWektoraPrzesuwania))
+            {
+                sprawdzanyPunkt = new Point((pilka.X + kierunekPoprzedni.X * dlugoscWektoraPrzesuwania), (pilka.Y + kierunekPoprzedni.Y * dlugoscWektoraPrzesuwania));
+
+                if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
+                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+                {
+                    przesunPilke(ref pilka, kierunekPoprzedni, ref kierunekPoprzedni, ref kierunekZabroniony);
+                }
+                else
+                {
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.E], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.N], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.S], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.W], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.NE], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.NW], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.SE], ref kierunekPoprzedni, ref kierunekZabroniony);
+                    przesunPilke(ref pilka, wektoryRuchow[(int)wektory.SW], ref kierunekPoprzedni, ref kierunekZabroniony);
+                }
+
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
