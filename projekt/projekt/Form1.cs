@@ -18,10 +18,14 @@ namespace projekt
         private byte[] LUTprog = new byte[256];
         private byte prog;
 
-        Point start;
-        Point stop;
-        Point srodekPilki;
-        int promienPilki;
+        private Point start;
+        private Point stop;
+        private Point srodekPilki;
+        private int promienPilki;
+        private int dlugoscWektoraPrzesuwania;
+
+        private enum wektory { E, NE, N, NW, W, SW, S, SE };
+        private Point[] wektoryRuchow = new Point[8];//wektory po jakich moze poruszac sie pilka:E,NE,N,NW,W,SW,S,SE
 
         public Form1()
         {
@@ -33,6 +37,17 @@ namespace projekt
             kamera = new VideoCapture(0);//inicjalizacja i start kamery
             kamera.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, wymaganyRozmiar.Width);
             kamera.Start();
+
+            //inicjalizacja wektorów
+            wektoryRuchow[(int)wektory.E] = new Point(1, 0);
+            wektoryRuchow[(int)wektory.NE] = new Point(1, 1);
+            wektoryRuchow[(int)wektory.N] = new Point(0, 1);
+            wektoryRuchow[(int)wektory.NW] = new Point(-1, 1);
+            wektoryRuchow[(int)wektory.W] = new Point(0, -1);
+            wektoryRuchow[(int)wektory.SW] = new Point(-1, -1);
+            wektoryRuchow[(int)wektory.S] = new Point(0, -1);
+            wektoryRuchow[(int)wektory.SE] = new Point(1, -1);
+
         }
 
         private void buttonZPliku_Click(object sender, EventArgs e)
@@ -271,9 +286,9 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (temp[y, x, 0] == kolorSciezki.V0 && temp[y, x, 1] == kolorSciezki.V1 && temp[y, x, 2] == kolorSciezki.V2||
+                    if (temp[y, x, 0] == kolorSciezki.V0 && temp[y, x, 1] == kolorSciezki.V1 && temp[y, x, 2] == kolorSciezki.V2 ||
                         temp[y, x, 0] == kolorStart.V0 && temp[y, x, 1] == kolorStart.V1 && temp[y, x, 2] == kolorStart.V2 ||
-                        temp[y, x, 0] == kolorStop.V0 && temp[y, x, 1] == kolorStop.V1 && temp[y, x, 2] == kolorStop.V2 )
+                        temp[y, x, 0] == kolorStop.V0 && temp[y, x, 1] == kolorStop.V1 && temp[y, x, 2] == kolorStop.V2)
                     {
                         kolor_nadpalenia.V0 = kolorSciezkiNadpalanie.V0;
                         kolor_nadpalenia.V1 = kolorSciezkiNadpalanie.V1;
@@ -433,7 +448,7 @@ namespace projekt
 
         private int obliczaniePromieniaPilki()//sprawdzanie odlelosci pion/poziom do kranca pilki od srodka
         {
-            int[] odleglosciOdSrodka=new int[4];
+            int[] odleglosciOdSrodka = new int[4];
 
             byte[,,] obraz = obrazWczytany.Data;
             int wysokosc = obrazWczytany.Height;
@@ -464,19 +479,17 @@ namespace projekt
                     break;
                 }
             }
-            for (int szer = srodekPilki.X; szer >-1; szer--)
+            for (int szer = srodekPilki.X; szer > -1; szer--)
             {
                 if (obraz[srodekPilki.Y, szer, 0] != kolorPilki.V0)
                 {
-                    odleglosciOdSrodka[3] =  srodekPilki.X- szer ;
+                    odleglosciOdSrodka[3] = srodekPilki.X - szer;
                     break;
                 }
             }
 
-
-
             Array.Sort(odleglosciOdSrodka);
-            return ((odleglosciOdSrodka[3]+odleglosciOdSrodka[0])/2);//usredniony promien z najwiekszej i najmniejszej odleglosci
+            return ((odleglosciOdSrodka[3] + odleglosciOdSrodka[0]) / 2);//usredniony promien z najwiekszej i najmniejszej odleglosci
         }
 
 
@@ -497,7 +510,7 @@ namespace projekt
             if (nr_el == 1)
             {
                 if (B == kolorSciezkiNadpalanie.V0 && G == kolorSciezkiNadpalanie.V1 && R == kolorSciezkiNadpalanie.V2 ||
-                    B == kolorSciezkiWypalanie.V0 && G == kolorSciezkiWypalanie.V1 && R == kolorSciezkiWypalanie.V2||
+                    B == kolorSciezkiWypalanie.V0 && G == kolorSciezkiWypalanie.V1 && R == kolorSciezkiWypalanie.V2 ||
                     B == kolorPilkiNadpalanie.V0 && G == kolorPilkiNadpalanie.V1 && R == kolorPilkiNadpalanie.V2 ||
                     B == kolorPilkiWypalanie.V0 && G == kolorPilkiWypalanie.V1 && R == kolorPilkiWypalanie.V2)
                 {
@@ -548,16 +561,16 @@ namespace projekt
             {
                 for (int szer = 0; szer < szerokosc; szer++)
                 {
-                    if(czyNalezyDoElementu(temp[wys, szer, 0], temp[wys, szer, 1], temp[wys, szer, 2], nr_elementu))
+                    if (czyNalezyDoElementu(temp[wys, szer, 0], temp[wys, szer, 1], temp[wys, szer, 2], nr_elementu))
                     {
                         //1 - droga, 2 - sciana, 3 - pilka
                         if (nr_elementu == 1)
                         {
-                            element[wys, szer, 0] =(byte)kolorSciezkiKopiowanie.V0;
+                            element[wys, szer, 0] = (byte)kolorSciezkiKopiowanie.V0;
                             element[wys, szer, 1] = (byte)kolorSciezkiKopiowanie.V1;
                             element[wys, szer, 2] = (byte)kolorSciezkiKopiowanie.V2;
                         }
-                        else if(nr_elementu==2)
+                        else if (nr_elementu == 2)
                         {
                             element[wys, szer, 0] = (byte)kolorScianKopiowanie.V0;
                             element[wys, szer, 1] = (byte)kolorScianKopiowanie.V1;
@@ -578,9 +591,71 @@ namespace projekt
             pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
         }
 
+        private void dodajWektorJesliMozna(Image<Bgr, byte> obraz, Point wektor)
+        {
+            byte[,,] temp = obraz.Data;
+
+            int przesuniecieX;
+            int przesuniecieY;
+            if (Math.Abs(wektor.X) == Math.Abs(wektor.Y))
+            {
+                przesuniecieX = (int)((double)wektor.X / Math.Sqrt(2.0));
+                przesuniecieY = (int)((double)wektor.Y / Math.Sqrt(2.0));
+            }
+            else
+            {
+                przesuniecieX = wektor.X;
+                przesuniecieY = wektor.Y;
+            }
+
+            przesuniecieX *= dlugoscWektoraPrzesuwania;
+            przesuniecieY *= dlugoscWektoraPrzesuwania;
+
+            Point sprawdzanyPunkt = new Point(srodekPilki.X + przesuniecieX, srodekPilki.Y + przesuniecieY);
+
+            if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
+                && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
+                && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+            {
+                CvInvoke.Line(obraz, srodekPilki, sprawdzanyPunkt, new MCvScalar(0, 0, 255), 4);
+            }
+        }
+
         private void buttonPokazWektory_Click(object sender, EventArgs e)
         {
+            dlugoscWektoraPrzesuwania = promienPilki * 2;
 
+            byte[,,] temp = obrazWczytany.Data;
+            int wysokosc = obrazWczytany.Height;
+            int szerokosc = obrazWczytany.Width;
+            byte[,,] element = new byte[wysokosc, szerokosc, 3];
+
+            int nr_elementu = 1;//droga
+            for (int wys = 0; wys < wysokosc; wys++)
+            {
+                for (int szer = 0; szer < szerokosc; szer++)
+                {
+                    if (czyNalezyDoElementu(temp[wys, szer, 0], temp[wys, szer, 1], temp[wys, szer, 2], nr_elementu))
+                    {
+                        element[wys, szer, 0] = (byte)kolorSciezkiKopiowanie.V0;
+                        element[wys, szer, 1] = (byte)kolorSciezkiKopiowanie.V1;
+                        element[wys, szer, 2] = (byte)kolorSciezkiKopiowanie.V2;
+                    }
+                }
+            }
+
+            obrazPoSegmentacji = new Image<Bgr, byte>(element);
+
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.E]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NE]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.N]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.NW]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.W]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SW]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.S]);
+            dodajWektorJesliMozna(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SE]);
+            CvInvoke.Circle(obrazPoSegmentacji, srodekPilki, 3, kolorPilki, -1);
+            pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
         }
 
         private void buttonPokazSciezke_Click(object sender, EventArgs e)
