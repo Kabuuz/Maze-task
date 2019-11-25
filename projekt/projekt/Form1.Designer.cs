@@ -52,6 +52,7 @@
             this.Wektory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonPokazSciezke = new System.Windows.Forms.Button();
             this.buttonPokazWektory = new System.Windows.Forms.Button();
+            this.buttonProgowanie = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWczytanyObraz)).BeginInit();
             this.groupBoxWczytywanieObrazu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPoSegmentacji)).BeginInit();
@@ -130,6 +131,7 @@
             // 
             // groupBoxSegmentacja
             // 
+            this.groupBoxSegmentacja.Controls.Add(this.buttonProgowanie);
             this.groupBoxSegmentacja.Controls.Add(this.labelOpisElementów3);
             this.groupBoxSegmentacja.Controls.Add(this.labelOpisElementów2);
             this.groupBoxSegmentacja.Controls.Add(this.labelProg);
@@ -148,7 +150,7 @@
             // labelOpisElementów3
             // 
             this.labelOpisElementów3.AutoSize = true;
-            this.labelOpisElementów3.Location = new System.Drawing.Point(21, 103);
+            this.labelOpisElementów3.Location = new System.Drawing.Point(180, 168);
             this.labelOpisElementów3.Name = "labelOpisElementów3";
             this.labelOpisElementów3.Size = new System.Drawing.Size(54, 17);
             this.labelOpisElementów3.TabIndex = 3;
@@ -157,7 +159,7 @@
             // labelOpisElementów2
             // 
             this.labelOpisElementów2.AutoSize = true;
-            this.labelOpisElementów2.Location = new System.Drawing.Point(21, 86);
+            this.labelOpisElementów2.Location = new System.Drawing.Point(180, 151);
             this.labelOpisElementów2.Name = "labelOpisElementów2";
             this.labelOpisElementów2.Size = new System.Drawing.Size(65, 17);
             this.labelOpisElementów2.TabIndex = 3;
@@ -175,7 +177,7 @@
             // labelOpisElementów1
             // 
             this.labelOpisElementów1.AutoSize = true;
-            this.labelOpisElementów1.Location = new System.Drawing.Point(21, 69);
+            this.labelOpisElementów1.Location = new System.Drawing.Point(180, 134);
             this.labelOpisElementów1.Name = "labelOpisElementów1";
             this.labelOpisElementów1.Size = new System.Drawing.Size(62, 17);
             this.labelOpisElementów1.TabIndex = 3;
@@ -232,7 +234,7 @@
             // 
             // buttonRozpocznijSegmentacje
             // 
-            this.buttonRozpocznijSegmentacje.Location = new System.Drawing.Point(24, 21);
+            this.buttonRozpocznijSegmentacje.Location = new System.Drawing.Point(24, 74);
             this.buttonRozpocznijSegmentacje.Name = "buttonRozpocznijSegmentacje";
             this.buttonRozpocznijSegmentacje.Size = new System.Drawing.Size(150, 43);
             this.buttonRozpocznijSegmentacje.TabIndex = 0;
@@ -295,6 +297,16 @@
             this.buttonPokazWektory.UseVisualStyleBackColor = true;
             this.buttonPokazWektory.Click += new System.EventHandler(this.buttonPokazWektory_Click);
             // 
+            // buttonProgowanie
+            // 
+            this.buttonProgowanie.Location = new System.Drawing.Point(24, 31);
+            this.buttonProgowanie.Name = "buttonProgowanie";
+            this.buttonProgowanie.Size = new System.Drawing.Size(150, 33);
+            this.buttonProgowanie.TabIndex = 4;
+            this.buttonProgowanie.Text = "Progowanie";
+            this.buttonProgowanie.UseVisualStyleBackColor = true;
+            this.buttonProgowanie.Click += new System.EventHandler(this.buttonProgowanie_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -347,6 +359,7 @@
         private System.Windows.Forms.Button buttonPokazWektory;
         private System.Windows.Forms.Label labelProg;
         private System.Windows.Forms.NumericUpDown numericUpDownProg;
+        private System.Windows.Forms.Button buttonProgowanie;
     }
 }
 

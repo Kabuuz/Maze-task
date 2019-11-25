@@ -56,7 +56,7 @@ namespace projekt
             string path = Directory.GetCurrentDirectory();
 
             Mat zPliku;//plik przechowywujacy png/jpg
-            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_paint.png");
+            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_zdjecie.jpg");
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;//wyświetlenie obrazu
@@ -499,7 +499,6 @@ namespace projekt
         //Przyciski
         private void buttonRozpocznijSegmentacje_Click(object sender, EventArgs e)
         {
-            progowanie();
             start = znajdzSrodekCiezkosciKoloru(kolorStart);
             stop = znajdzSrodekCiezkosciKoloru(kolorStop);
             srodekPilki = znajdzSrodekCiezkosciKoloru(kolorPilki);
@@ -771,6 +770,11 @@ namespace projekt
                 }
 
             }
+        }
+
+        private void buttonProgowanie_Click(object sender, EventArgs e)
+        {
+            progowanie();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
