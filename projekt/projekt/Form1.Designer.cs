@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Wektory");
             this.pictureBoxWczytanyObraz = new System.Windows.Forms.PictureBox();
             this.buttonZPliku = new System.Windows.Forms.Button();
             this.buttonZKamery = new System.Windows.Forms.Button();
@@ -38,6 +37,7 @@
             this.labelWczytanyObraz = new System.Windows.Forms.Label();
             this.labelSegmentacjaObraz = new System.Windows.Forms.Label();
             this.groupBoxSegmentacja = new System.Windows.Forms.GroupBox();
+            this.buttonProgowanie = new System.Windows.Forms.Button();
             this.labelOpisElementów3 = new System.Windows.Forms.Label();
             this.labelOpisElementów2 = new System.Windows.Forms.Label();
             this.labelProg = new System.Windows.Forms.Label();
@@ -52,7 +52,6 @@
             this.Wektory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonPokazSciezke = new System.Windows.Forms.Button();
             this.buttonPokazWektory = new System.Windows.Forms.Button();
-            this.buttonProgowanie = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWczytanyObraz)).BeginInit();
             this.groupBoxWczytywanieObrazu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPoSegmentacji)).BeginInit();
@@ -146,6 +145,16 @@
             this.groupBoxSegmentacja.TabIndex = 6;
             this.groupBoxSegmentacja.TabStop = false;
             this.groupBoxSegmentacja.Text = "Segmentacja";
+            // 
+            // buttonProgowanie
+            // 
+            this.buttonProgowanie.Location = new System.Drawing.Point(24, 31);
+            this.buttonProgowanie.Name = "buttonProgowanie";
+            this.buttonProgowanie.Size = new System.Drawing.Size(150, 33);
+            this.buttonProgowanie.TabIndex = 4;
+            this.buttonProgowanie.Text = "Progowanie";
+            this.buttonProgowanie.UseVisualStyleBackColor = true;
+            this.buttonProgowanie.Click += new System.EventHandler(this.buttonProgowanie_Click);
             // 
             // labelOpisElementów3
             // 
@@ -265,13 +274,12 @@
             this.listViewListaWektorow.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Wektory});
             this.listViewListaWektorow.HideSelection = false;
-            this.listViewListaWektorow.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
-            this.listViewListaWektorow.Location = new System.Drawing.Point(24, 89);
+            this.listViewListaWektorow.Location = new System.Drawing.Point(24, 76);
             this.listViewListaWektorow.Name = "listViewListaWektorow";
-            this.listViewListaWektorow.Size = new System.Drawing.Size(306, 294);
-            this.listViewListaWektorow.TabIndex = 2;
+            this.listViewListaWektorow.Size = new System.Drawing.Size(306, 218);
+            this.listViewListaWektorow.TabIndex = 0;
             this.listViewListaWektorow.UseCompatibleStateImageBehavior = false;
+            this.listViewListaWektorow.View = System.Windows.Forms.View.SmallIcon;
             // 
             // Wektory
             // 
@@ -296,16 +304,6 @@
             this.buttonPokazWektory.Text = "Pokaż wektory";
             this.buttonPokazWektory.UseVisualStyleBackColor = true;
             this.buttonPokazWektory.Click += new System.EventHandler(this.buttonPokazWektory_Click);
-            // 
-            // buttonProgowanie
-            // 
-            this.buttonProgowanie.Location = new System.Drawing.Point(24, 31);
-            this.buttonProgowanie.Name = "buttonProgowanie";
-            this.buttonProgowanie.Size = new System.Drawing.Size(150, 33);
-            this.buttonProgowanie.TabIndex = 4;
-            this.buttonProgowanie.Text = "Progowanie";
-            this.buttonProgowanie.UseVisualStyleBackColor = true;
-            this.buttonProgowanie.Click += new System.EventHandler(this.buttonProgowanie_Click);
             // 
             // Form1
             // 

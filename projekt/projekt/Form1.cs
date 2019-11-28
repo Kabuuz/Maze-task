@@ -35,19 +35,19 @@ namespace projekt
             wymaganyRozmiar = pictureBoxWczytanyObraz.Size;
             obrazWczytany = new Image<Bgr, byte>(wymaganyRozmiar);
 
-            kamera = new VideoCapture(0);//inicjalizacja i start kamery
+            /*kamera = new VideoCapture(0);//inicjalizacja i start kamery
             kamera.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, wymaganyRozmiar.Width);
-            kamera.Start();
+            kamera.Start();*/
 
             //inicjalizacja wektorów
             wektoryRuchow[(int)wektory.E] = new Point(1, 0);
-            wektoryRuchow[(int)wektory.NE] = new Point(1, 1);
-            wektoryRuchow[(int)wektory.N] = new Point(0, 1);
-            wektoryRuchow[(int)wektory.NW] = new Point(-1, 1);
+            wektoryRuchow[(int)wektory.SE] = new Point(1, 1);
+            wektoryRuchow[(int)wektory.S] = new Point(0, 1);
+            wektoryRuchow[(int)wektory.SW] = new Point(-1, 1);
             wektoryRuchow[(int)wektory.W] = new Point(-1, 0);
-            wektoryRuchow[(int)wektory.SW] = new Point(-1, -1);
-            wektoryRuchow[(int)wektory.S] = new Point(0, -1);
-            wektoryRuchow[(int)wektory.SE] = new Point(1, -1);
+            wektoryRuchow[(int)wektory.NW] = new Point(-1, -1);
+            wektoryRuchow[(int)wektory.N] = new Point(0, -1);
+            wektoryRuchow[(int)wektory.NE] = new Point(1, -1);
 
         }
 
@@ -56,7 +56,7 @@ namespace projekt
             string path = Directory.GetCurrentDirectory();
 
             Mat zPliku;//plik przechowywujacy png/jpg
-            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_zdjecie.jpg");
+            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_paint.png");
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;//wyświetlenie obrazu
@@ -131,6 +131,7 @@ namespace projekt
         //kolor po progowaniu
         private MCvScalar kolorSciezki = new MCvScalar(255, 255, 255);
         private MCvScalar kolorScian = new MCvScalar(255, 0, 0);
+        private MCvScalar kolorScian2 = new MCvScalar(255, 255, 0);
         private MCvScalar kolorPilki = new MCvScalar(0, 255, 255);
         private MCvScalar kolorStart = new MCvScalar(0, 255, 0);
         private MCvScalar kolorStop = new MCvScalar(0, 0, 255);
@@ -375,7 +376,8 @@ namespace projekt
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (temp[y, x, 0] == kolorScian.V0 && temp[y, x, 1] == kolorScian.V1 && temp[y, x, 2] == kolorScian.V2)
+                    if (temp[y, x, 0] == kolorScian.V0 && temp[y, x, 1] == kolorScian.V1 && temp[y, x, 2] == kolorScian.V2
+                        || temp[y, x, 0] == kolorScian2.V0 && temp[y, x, 1] == kolorScian2.V1 && temp[y, x, 2] == kolorScian2.V2)
                     {
                         kolor_nadpalenia.V0 = kolorScianNadpalanie.V0;
                         kolor_nadpalenia.V1 = kolorScianNadpalanie.V1;
@@ -625,6 +627,7 @@ namespace projekt
 
         private void buttonPokazWektory_Click(object sender, EventArgs e)
         {
+            listViewListaWektorow.Clear();
             dlugoscWektoraPrzesuwania = promienPilki * 2;//nede przesuwac o promien dlatego sprawdzam co jest 2*promien od srodka
 
             byte[,,] temp = obrazWczytany.Data;
@@ -656,7 +659,7 @@ namespace projekt
             narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SW]);
             narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.S]);
             narysujDozwolonyWektor(obrazPoSegmentacji, wektoryRuchow[(int)wektory.SE]);
-            CvInvoke.Circle(obrazPoSegmentacji, srodekPilki, 3, kolorPilki, -1);
+            CvInvoke.Circle(obrazPoSegmentacji, srodekPilki, promienPilki, kolorPilki, -1);
             pictureBoxPoSegmentacji.Image = obrazPoSegmentacji.Bitmap;
         }
 
@@ -670,6 +673,46 @@ namespace projekt
             {
                 return false;
             }
+        }
+
+        private string przygotujWektorKierunku(Point wektor)
+        {
+            string wektorString = "";
+
+            if(wektor.X==1&&wektor.Y==0)//E
+            {
+                wektorString = "E,";
+            }
+            if (wektor.X == 0 && wektor.Y == 1)//S
+            {
+                wektorString = "S,";
+            }
+            if (wektor.X == -1 && wektor.Y == 0)//W
+            {
+                wektorString = "W,";
+            }
+            if (wektor.X == 0 && wektor.Y == -1)//N
+            {
+                wektorString = "N,";
+            }
+            if (wektor.X == 1 && wektor.Y == 1)//SE
+            {
+                wektorString = "SE,";
+            }
+            if (wektor.X == -1 && wektor.Y == 1)//SW
+            {
+                wektorString = "SW,";
+            }
+            if (wektor.X == -1 && wektor.Y == -1)////NW
+            {
+                wektorString = "NW,";
+            }
+            if (wektor.X == 1 && wektor.Y == -1)//NE
+            {
+                wektorString = "NE,";
+            }
+
+            return wektorString;
         }
 
         private void przesunPilke(ref Point pilka, Point wektor, ref Point wektorPoprzedni, ref Point zakazanyWektor)
@@ -710,6 +753,8 @@ namespace projekt
                     {
                         wektorPoprzedni.X = wektor.X;
                         wektorPoprzedni.Y = wektor.Y;
+
+                        listViewListaWektorow.Items.Add(przygotujWektorKierunku(wektor));
                     }
                 }
             }
@@ -742,6 +787,7 @@ namespace projekt
                     pilka.Y = sprawdzanyPunkt.Y;
                     kierunekPoprzedni.X = wektoryRuchow[i].X;
                     kierunekPoprzedni.Y = wektoryRuchow[i].Y;
+                    listViewListaWektorow.Items.Add(przygotujWektorKierunku(wektoryRuchow[i]));
                 }
             }
             CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
@@ -779,7 +825,7 @@ namespace projekt
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
+           // kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
         }
     }
 }
