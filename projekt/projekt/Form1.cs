@@ -56,7 +56,7 @@ namespace projekt
             string path = Directory.GetCurrentDirectory();
 
             Mat zPliku;//plik przechowywujacy png/jpg
-            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_paint.png");
+            zPliku = CvInvoke.Imread(@"..\\..\\..\\..\\..\\labirynt_kamera.jpg");
             CvInvoke.Resize(zPliku, zPliku, pictureBoxWczytanyObraz.Size);//zmien rozmiar(skąd,dokąd,rozmiar docelowy)
             obrazWczytany = zPliku.ToImage<Bgr, byte>();//skopiowanie wczytanego obrazu do pamięci
             pictureBoxWczytanyObraz.Image = obrazWczytany.Bitmap;//wyświetlenie obrazu
@@ -679,7 +679,7 @@ namespace projekt
         {
             string wektorString = "";
 
-            if(wektor.X==1&&wektor.Y==0)//E
+            if (wektor.X == 1 && wektor.Y == 0)//E
             {
                 wektorString = "E,";
             }
@@ -779,20 +779,24 @@ namespace projekt
             for (int i = 0; i < wektoryRuchow.Length; i++)
             {
                 sprawdzanyPunkt = new Point(pilka.X + wektoryRuchow[i].X * dlugoscWektoraPrzesuwania, pilka.Y + wektoryRuchow[i].Y * dlugoscWektoraPrzesuwania);
-                if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
-                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
-                    && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+                if (sprawdzanyPunkt.X>=0&&sprawdzanyPunkt.Y>=0)
                 {
-                    pilka.X = sprawdzanyPunkt.X;
-                    pilka.Y = sprawdzanyPunkt.Y;
-                    kierunekPoprzedni.X = wektoryRuchow[i].X;
-                    kierunekPoprzedni.Y = wektoryRuchow[i].Y;
-                    listViewListaWektorow.Items.Add(przygotujWektorKierunku(wektoryRuchow[i]));
-                }
-            }
-            CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
+                    if (temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 0] == kolorSciezkiKopiowanie.V0
+                                        && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 1] == kolorSciezkiKopiowanie.V1
+                                        && temp[sprawdzanyPunkt.Y, sprawdzanyPunkt.X, 2] == kolorSciezkiKopiowanie.V2)
+                    {
+                        pilka.X = sprawdzanyPunkt.X;
+                        pilka.Y = sprawdzanyPunkt.Y;
+                        kierunekPoprzedni.X = wektoryRuchow[i].X;
+                        kierunekPoprzedni.Y = wektoryRuchow[i].Y;
+                        listViewListaWektorow.Items.Add(przygotujWektorKierunku(wektoryRuchow[i]));
+                    }
+                    CvInvoke.Rectangle(obrazPoSegmentacji, new Rectangle(pilka.X - promienPilki,
                         pilka.Y - promienPilki, 2 * promienPilki, 2 * promienPilki),
                         new MCvScalar(0, 0, 255), -1);
+                }
+            }
+            
             while (!pilkaWObszarzeKonca(pilka, stop, dlugoscWektoraPrzesuwania))
             {
                 sprawdzanyPunkt = new Point((pilka.X + kierunekPoprzedni.X * dlugoscWektoraPrzesuwania), (pilka.Y + kierunekPoprzedni.Y * dlugoscWektoraPrzesuwania));
@@ -825,7 +829,7 @@ namespace projekt
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-           // kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
+            // kamera.Stop();//zatrzymanie kamery po wylączeniu aplikacji
         }
     }
 }
